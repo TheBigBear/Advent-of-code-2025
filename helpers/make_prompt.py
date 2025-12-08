@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 make_prompt.py — Combine AoC puzzle + solver contract into a single prompt
