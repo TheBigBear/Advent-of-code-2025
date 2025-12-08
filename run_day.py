@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 AoC 2025 dispatcher for Python solvers.
