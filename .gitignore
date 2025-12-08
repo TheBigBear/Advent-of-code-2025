@@ -1,0 +1,21 @@
+
+# Local-only secrets and settings
+config/aoc_session.txt
+config/github_auth.txt
+config/settings.json
+.env
+*.env
+
+# Python cache / temp
+__pycache__/
+*.pyc
+
+# Editor/OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Helper artifacts
+helpers/*.log
+helpers/.cache/
