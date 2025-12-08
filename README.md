@@ -1,4 +1,9 @@
-# Advent-of-code-2025
+# Advent of Code 2025 – Solutions Repository
+
+This repository is structured to help me organise and solve Advent of Code 2025 puzzles in **Python** and **PowerShell**, with automation for fetching puzzles and inputs, and pushing updates to my public GitHub repo.
+
+---
+
 ```markdown
 Advent-of-code-2025/
 │
