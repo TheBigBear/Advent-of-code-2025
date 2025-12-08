@@ -1,5 +1,5 @@
 Day 1 - Advent of Code 2025
-Advent of Code[About][Events][Shop][Settings][Log Out]TheBigBear 2*&nbsp;&nbsp;&nbsp;int y=2025;[Calendar][AoC++][Sponsors][Leaderboards][Stats]
+Advent of Code[About][Events][Shop][Settings][Log Out]TheBigBear 2*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/^2025$/[Calendar][AoC++][Sponsors][Leaderboards][Stats]
 Our sponsors help make Advent of Code possible:CodeRabbit - Cut Code Review Time and Bugs in Half
 --- Day 1: Secret Entrance ---The Elves have good news and bad news.
 The good news is that they've discovered project management! This has given them the tools they need to prevent their usual Christmas emergency. For example, they now know that the North Pole decorations need to be finished soon so that other critical tasks can start on time.
