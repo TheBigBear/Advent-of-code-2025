@@ -255,6 +255,7 @@ def ensure_solver_templates(day: int):
     """), encoding="utf-8")
 
 # --- Commit & push with non-persistent PAT header ---
+
 def commit_and_push(day: int, username: str, pat: str):
     files = [
         f"inputs/day{day:02d}.txt",
@@ -264,30 +265,29 @@ def commit_and_push(day: int, username: str, pat: str):
         f"powershell/day{day:02d}.ps1",
         "helpers/solver_prompt.md",
     ]
-    # Add .gitignore if present
     if (ROOT / ".gitignore").exists():
         files.append(".gitignore")
 
     print("[git] add/commit ...")
-    run_git(["add", *files], check=True)
-    msg = f"Day {day:02d}: add puzzle + input + templates"
     try:
+        run_git(["add", *files], check=True)
+        msg = f"Day {day:02d}: add puzzle + input + templates"
         run_git(["commit", "-m", msg], check=True)
     except subprocess.CalledProcessError as e:
-        # Nothing to commit? proceed to push anyway
-        if "nothing to commit" in (e.stderr or "").lower() or "nothing added" in (e.stderr or "").lower():
+        # Proceed even if there's nothing to commit
+        combined = (e.stderr or "") + (e.stdout or "")
+        if "nothing to commit" in combined.lower() or "nothing added" in combined.lower():
             print("[git] Nothing new to commit, continuing to push.")
         else:
-            print(e.stderr or e.stdout)
+            print(combined)
             raise
 
-    # Detect current branch or remote HEAD
+    # Determine branch: current symbolic HEAD or remote HEAD
     branch = None
     try:
         r = run_git(["symbolic-ref", "--short", "HEAD"])
         branch = r.stdout.strip()
     except subprocess.CalledProcessError:
-        # fall back to remote HEAD
         try:
             r = run_git(["remote", "show", "origin"])
             m = re.search(r"HEAD branch:\s+(\S+)", r.stdout)
@@ -297,14 +297,23 @@ def commit_and_push(day: int, username: str, pat: str):
     if not branch:
         branch = "main"
 
+    # Build one-off Authorization header (non-persistent)
     basic = base64.b64encode(f"{username}:{pat}".encode()).decode()
+
     print(f"[git] push origin {branch} ...")
     try:
-        run_git(["push", "origin", branch, "-c", f"http.extraheader=AUTHORIZATION: basic {basic}"], check=True)
+        # IMPORTANT: -c must precede the 'push' subcommand
+        subprocess.run(
+            ["git", "-c", f"http.extraheader=AUTHORIZATION: basic {basic}", "push", "origin", branch],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
         print(f"[git] pushed to {branch}")
     except subprocess.CalledProcessError as e:
         print(e.stderr or e.stdout or "Push failed.")
-        print("\nIf you see GH007 (email privacy), set your commit email to the GitHub noreply address and amend:")
+        print("\nIf you see GH007 (email privacy), confirm your commit email is a GitHub noreply address and amend:")
         print("  git config user.email \"your_username@users.noreply.github.com\"")
         print("  git commit --amend --reset-author && git push -f")
         raise
