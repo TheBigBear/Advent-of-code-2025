@@ -1,0 +1,13 @@
+config/aoc_session.txt
+config/github_auth.txt
+config/settings.json
+.env
+*.env
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+helpers/*.log
+helpers/.cache/

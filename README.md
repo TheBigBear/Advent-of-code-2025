@@ -4,6 +4,34 @@ This repository is structured to help me organise and solve Advent of Code 2025 
 
 ---
 
+## Structure
+- `inputs/` – puzzle input files
+- `puzzles/` – puzzle descriptions
+- `python/` – Python solutions
+- `powershell/` – PowerShell solutions
+- `helpers/` – automation scripts
+- `config/` – local-only secrets (gitignored)
+
+---
+
+## Quick Start
+1. Clone your repo:
+   ```bash
+   git clone https://github.com/TheBigBear/Advent-of-code-2025.git
+   cd Advent-of-code-2025
+   ```
+2. Run bootstrap:
+   ```bash
+   python bootstrap_repo.py
+   ```
+3. Fetch a puzzle:
+   ```bash
+   python helpers/aoc_helper.py
+   ```
+See `Usage.md` for detailed examples.
+
+---
+
 ```markdown
 Advent-of-code-2025/
 │
@@ -29,3 +57,30 @@ Advent-of-code-2025/
     └─ utils/                # small helper modules, if needed later
         └─ __init__.py
 ```
+
+
+# Advent of Code 2025 – Solutions Repository
+
+## Structure
+- `inputs/` – puzzle input files
+- `puzzles/` – puzzle descriptions
+- `python/` – Python solutions
+- `powershell/` – PowerShell solutions
+- `helpers/` – automation scripts
+- `config/` – local-only secrets (gitignored)
+
+## Quick Start
+1. Clone your repo:
+   ```bash
+   git clone https://github.com/TheBigBear/Advent-of-code-2025.git
+   cd Advent-of-code-2025
+   ```
+2. Run bootstrap:
+   ```bash
+   python bootstrap_repo.py
+   ```
+3. Fetch a puzzle:
+   ```bash
+   python helpers/aoc_helper.py
+   ```
+See `Usage.md` for detailed examples.
