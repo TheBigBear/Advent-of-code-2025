@@ -1,4 +1,5 @@
 # Advent-of-code-2025
+```markdown
 Advent-of-code-2025/
 │
 ├─ README.md
@@ -22,3 +23,4 @@ Advent-of-code-2025/
     ├─ solver_prompt.md      # reusable prompt for solution generation
     └─ utils/                # small helper modules, if needed later
         └─ __init__.py
+```
