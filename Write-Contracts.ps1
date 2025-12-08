@@ -1,4 +1,3 @@
-
 #!/usr/bin/env pwsh
 <#
 Write-Contracts.ps1
