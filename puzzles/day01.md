@@ -1,6 +1,17 @@
 Day 1 - Advent of Code 2025
-Advent of Code[About][Events][Shop][Settings][Log Out]TheBigBear 2*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/^2025$/[Calendar][AoC++][Sponsors][Leaderboards][Stats]
-Our sponsors help make Advent of Code possible:CodeRabbit - Cut Code Review Time and Bugs in Half
+
+
+
+window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});
+
+
+Advent of Code[About][Events][Shop][Settings][Log Out]TheBigBear 2*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2025[Calendar][AoC++][Sponsors][Leaderboards][Stats]
+
+
+Our sponsors help make Advent of Code possible:Doppler - No more .env headaches. Doppler automates secrets across CI/CD and every environment. Secure secrets. Ship faster. Try for free today!
+
+
+
 --- Day 1: Secret Entrance ---The Elves have good news and bad news.
 The good news is that they've discovered project management! This has given them the tools they need to prevent their usual Christmas emergency. For example, they now know that the North Pole decorations need to be finished soon so that other critical tasks can start on time.
 The bad news is that they've realized they have a different emergency: according to their resource planning, none of them have any time left to decorate the North Pole!
@@ -26,7 +37,9 @@ L1
 L99
 R14
 L82
+
 Following these rotations would cause the dial to move as follows:
+
 The dial starts by pointing at 50.
 The dial is rotated L68 to point at 82.
 The dial is rotated L30 to point at 52.
@@ -38,13 +51,16 @@ The dial is rotated L1 to point at 99.
 The dial is rotated L99 to point at 0.
 The dial is rotated R14 to point at 14.
 The dial is rotated L82 to point at 32.
+
 Because the dial points at 0 a total of three times during this process, the password in this example is 3.
 Analyze the rotations in your attached document. What's the actual password to open the door?
+
 Your puzzle answer was 1180.--- Part Two ---You're sure that's the right password, but the door won't open. You knock, but nobody answers. You build a snowman while you think.
 As you're rolling the snowballs for your snowman, you find another security document that must have fallen into the snow:
 "Due to newer security protocols, please use password method 0x434C49434B until further notice."
 You remember from the training seminar that "method 0x434C49434B" means you're actually supposed to count the number of times any click causes the dial to point at 0, regardless of whether it happens during a rotation or at the end of one.
 Following the same rotations as in the above example, the dial points at zero a few extra times during its rotations:
+
 The dial starts by pointing at 50.
 The dial is rotated L68 to point at 82; during this rotation, it points at 0 once.
 The dial is rotated L30 to point at 52.
@@ -56,9 +72,11 @@ The dial is rotated L1 to point at 99.
 The dial is rotated L99 to point at 0.
 The dial is rotated R14 to point at 14.
 The dial is rotated L82 to point at 32; during this rotation, it points at 0 once.
+
 In this example, the dial points at 0 three times at the end of a rotation, plus three more times during a rotation. So, in this example, the new password would be 6.
 Be careful: if the dial were pointing at 50, a single rotation like R1000 would cause the dial to point at 0 ten times before returning back to 50!
 Using password method 0x434C49434B, what is the password to open the door?
+
 Your puzzle answer was 6892.Both parts of this puzzle are complete! They provide two gold stars: **
 At this point, you should return to your Advent calendar and try another puzzle.
 If you still want to see it, you can get your puzzle input.
@@ -66,3 +84,14 @@ You can also [Shareon
   Bluesky
   Twitter
   Mastodon] this puzzle.
+
+
+
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
