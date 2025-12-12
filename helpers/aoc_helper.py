@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 Advent of Code 2025 helper:
@@ -6,7 +7,6 @@ Advent of Code 2025 helper:
 - Auto-commits and pushes to your GitHub repo using PAT via a non-persistent header
 - Supports --day argument for non-interactive runs
 """
-
 import argparse
 import base64
 import getpass
@@ -24,14 +24,13 @@ except ImportError:
     sys.exit(1)
 
 # --- Repo paths & AoC constants ---
-ROOT     = Path(__file__).resolve().parents[1]
-CONFIG   = ROOT / "config"
-INPUTS   = ROOT / "inputs"
-PUZZLES  = ROOT / "puzzles"
-PYDIR    = ROOT / "python"
-PSDIR    = ROOT / "powershell"
-HELPERS  = ROOT / "helpers"
-
+ROOT = Path(__file__).resolve().parents[1]
+CONFIG = ROOT / "config"
+INPUTS = ROOT / "inputs"
+PUZZLES = ROOT / "puzzles"
+PYDIR = ROOT / "python"
+PSDIR = ROOT / "powershell"
+HELPERS = ROOT / "helpers"
 AOC_YEAR = 2025
 AOC_BASE = "https://adventofcode.com"
 
@@ -53,7 +52,7 @@ def ensure_dirs():
 
 # --- Session & PAT readers (prompt if missing) ---
 def read_or_prompt_aoc_session():
-    """Read AoC cooke from config/aoc_session.txt or prompt once."""
+    """Read AoC cookie from config/aoc_session.txt or prompt once."""
     sess_file = CONFIG / "aoc_session.txt"
     if sess_file.exists():
         return sess_file.read_text(encoding="utf-8").strip()
@@ -100,17 +99,13 @@ def _clean_session(raw: str) -> str:
 
 def _headers(session_value: str) -> dict:
     return {
-        "User-Agent": "TheBigBear AoC helper (https://github.com/TheBigBear/Advent-of-code-2025)",
+        "User-Agent": "AoC Helper (https://github.com/TheBigBear/Advent-of-code-2025)",
         "Cookie": f"session={session_value}",
     }
 
 def _get(url: str, headers: dict, expect_text: bool = True):
-    """
-    GET with small retry loop and clearer errors on 400.
-    Returns response text (default) or bytes if expect_text=False.
-    """
+    """GET with small retry loop and clearer errors on 400."""
     import time
-
     last_err = None
     for attempt in range(1, 4):
         try:
@@ -146,8 +141,9 @@ def prompt_and_store_session():
 
 # --- AoC fetch main ---
 def fetch_aoc(day: int, session_raw: str):
-    # ... (session validation as before) ...
-    h = _headers(session)
+    # Normalise and validate session cookie
+    session_value = _clean_session(session_raw)
+    h = _headers(session_value)
 
     # 1) HTML: only fetch once for Day 01 (if missing)
     if day == 1:
@@ -156,13 +152,12 @@ def fetch_aoc(day: int, session_raw: str):
             print("[AoC] Fetching shared HTML (Day 01) ...")
             html = _get(f"{AOC_BASE}/{AOC_YEAR}/day/1", h)
             html_path.write_text(html, encoding="utf-8")
-    else:
-        print("[AoC] Skipping HTML (identical across days)")
+        else:
+            print("[AoC] Skipping HTML (identical across days)")
 
     # 2) MD always (day-specific hints)
     print(f"[AoC] Fetching day {day} MD ...")
     html = _get(f"{AOC_BASE}/{AOC_YEAR}/day/{day}", h)
-    import re
     md = re.sub(r"<(script|style)[\\s\\S]*?</\\1>", "", html, flags=re.I)
     md = re.sub(r"<[^>]+>", "", md)
     md = re.sub(r"\\s+\\n", "\\n", md)
@@ -177,68 +172,59 @@ def fetch_aoc(day: int, session_raw: str):
         input_text = _get(f"{AOC_BASE}/{AOC_YEAR}/day/{day}/input", h)
         in_file.write_text(input_text, encoding="utf-8")
 
-
 # --- Solver templates ---
 def ensure_solver_templates(day: int):
     pyf = PYDIR / f"day{day:02d}.py"
     psf = PSDIR / f"day{day:02d}.ps1"
-
     if not pyf.exists():
         pyf.write_text(textwrap.dedent(f"""\
-            #!/usr/bin/env python3
-            import sys
-            from pathlib import Path
+#!/usr/bin/env python3
+import sys
+from pathlib import Path
+DAY = {day}
+root = Path(__file__).resolve().parents[1]
+in_path = root / "inputs" / f"day{{DAY:02d}}.txt"
 
-            DAY = {day}
-            root = Path(__file__).resolve().parents[1]
-            in_path = root / "inputs" / f"day{{DAY:02d}}.txt"
+def solve(lines):
+    # TODO: implement Part 1 and Part 2 for Day {day}
+    # 'lines' is a list of strings read from inputs/day{day:02d}.txt
+    return None, None
 
-            def solve(lines):
-                # TODO: implement Part 1 and Part 2 for Day {day}
-                # 'lines' is a list of strings read from inputs/day{day:02d}.txt
-                return None, None
-
-            if __name__ == "__main__":
-                data = in_path.read_text(encoding="utf-8").splitlines()
-                p1, p2 = solve(data)
-                print(f"Part 1: {{p1}}")
-                print(f"Part 2: {{p2}}")
-        """), encoding="utf-8")
-
+if __name__ == "__main__":
+    data = in_path.read_text(encoding="utf-8").splitlines()
+    p1, p2 = solve(data)
+    print(f"Part 1: {{p1}}")
+    print(f"Part 2: {{p2}}")
+"""), encoding="utf-8")
     if not psf.exists():
         psf.write_text(textwrap.dedent(f"""\
-            param([int]$Day = {day})
-            $root   = (Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path))
-            $inPath = Join-Path $root ("inputs/day{day:02d}.txt")
-            if (-not (Test-Path $inPath)) {{
-                Write-Error "Input file not found: $inPath"
-                exit 1
-            }}
-            $lines = Get-Content -LiteralPath $inPath
+param([int]$Day = {day})
+$root = (Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path))
+$inPath = Join-Path $root ("inputs/day{day:02d}.txt")
+if (-not (Test-Path $inPath)) {{
+    Write-Error "Input file not found: $inPath"
+    exit 1
+}}
+$lines = Get-Content -LiteralPath $inPath
+# TODO: implement Part 1 and Part 2 for Day {day} using $lines
+$part1 = $null
+$part2 = $null
+Write-Output ("Part 1: {0}" -f $part1)
+Write-Output ("Part 2: {0}" -f $part2)
+"""), encoding="utf-8")
 
-            # TODO: implement Part 1 and Part 2 for Day {day} using $lines
-            $part1 = $null
-            $part2 = $null
-
-            Write-Output ("Part 1: {0}" -f $part1)
-            Write-Output ("Part 2: {0}" -f $part2)
-        """), encoding="utf-8")
-
-    # Update solver prompt (optional convenience)
     prompt_md = HELPERS / "solver_prompt.md"
     prompt_md.write_text(textwrap.dedent(f"""\
-        Solve Advent of Code {AOC_YEAR} Day {day} using:
-        - Puzzle: puzzles/day{day:02d}.md (raw HTML in puzzles/day{day:02d}.html)
-        - Input:  inputs/day{day:02d}.txt
+Solve Advent of Code {AOC_YEAR} Day {day} using:
+- Puzzle: puzzles/day{day:02d}.md (raw HTML in puzzles/day{day:02d}.html)
+- Input: inputs/day{day:02d}.txt
+Requirements:
+- Python: write to python/day{day:02d}.py and read inputs/day{day:02d}.txt
+- PowerShell: write to powershell/day{day:02d}.ps1 and read inputs/day{day:02d}.txt
+- Print Part 1 and Part 2 answers.
+"""), encoding="utf-8")
 
-        Requirements:
-        - Python:     write to python/day{day:02d}.py and read inputs/day{day:02d}.txt
-        - PowerShell: write to powershell/day{day:02d}.ps1 and read inputs/day{day:02d}.txt
-        - Print Part 1 and Part 2 answers.
-    """), encoding="utf-8")
-
-# --- Commit & push with non-persistent PAT header ---
-
+# --- Commit & push ---
 def commit_and_push(day: int, username: str, pat: str):
     files = [
         f"inputs/day{day:02d}.txt",
@@ -250,22 +236,18 @@ def commit_and_push(day: int, username: str, pat: str):
     ]
     if (ROOT / ".gitignore").exists():
         files.append(".gitignore")
-
     print("[git] add/commit ...")
     try:
         run_git(["add", *files], check=True)
         msg = f"Day {day:02d}: add puzzle + input + templates"
         run_git(["commit", "-m", msg], check=True)
     except subprocess.CalledProcessError as e:
-        # Proceed even if there's nothing to commit
         combined = (e.stderr or "") + (e.stdout or "")
         if "nothing to commit" in combined.lower() or "nothing added" in combined.lower():
             print("[git] Nothing new to commit, continuing to push.")
         else:
             print(combined)
             raise
-
-    # Determine branch: current symbolic HEAD or remote HEAD
     branch = None
     try:
         r = run_git(["symbolic-ref", "--short", "HEAD"])
@@ -273,19 +255,15 @@ def commit_and_push(day: int, username: str, pat: str):
     except subprocess.CalledProcessError:
         try:
             r = run_git(["remote", "show", "origin"])
-            m = re.search(r"HEAD branch:\s+(\S+)", r.stdout)
+            m = re.search(r"HEAD branch:\\s+(\\S+)", r.stdout)
             branch = m.group(1) if m else None
         except subprocess.CalledProcessError:
             pass
     if not branch:
         branch = "main"
-
-    # Build one-off Authorization header (non-persistent)
     basic = base64.b64encode(f"{username}:{pat}".encode()).decode()
-
     print(f"[git] push origin {branch} ...")
     try:
-        # IMPORTANT: -c must precede the 'push' subcommand
         subprocess.run(
             ["git", "-c", f"http.extraheader=AUTHORIZATION: basic {basic}", "push", "origin", branch],
             cwd=ROOT,
@@ -297,8 +275,8 @@ def commit_and_push(day: int, username: str, pat: str):
     except subprocess.CalledProcessError as e:
         print(e.stderr or e.stdout or "Push failed.")
         print("\nIf you see GH007 (email privacy), confirm your commit email is a GitHub noreply address and amend:")
-        print("  git config user.email \"your_username@users.noreply.github.com\"")
-        print("  git commit --amend --reset-author && git push -f")
+        print(' git config user.email "your_username@users.noreply.github.com"')
+        print(" git commit --amend --reset-author && git push -f")
         raise
 
 # --- Arg parsing + main ---
@@ -317,28 +295,19 @@ def prompt_day():
 def main():
     print("=== Advent of Code helper ===")
     ensure_dirs()
-
-    # args / day
     args = parse_args()
     day = args.day if (args.day and 1 <= args.day <= 25) else prompt_day()
-
-    # creds
     session_raw = read_or_prompt_aoc_session()
     username, pat = read_or_prompt_github_auth()
-
-    # fetch + scaffold
     fetch_aoc(day, session_raw)
     ensure_solver_templates(day)
-
-    # commit + push
     commit_and_push(day, username, pat)
-
     print(f"\n✓ Day {day:02d} ready.\n"
-          f"  - inputs/day{day:02d}.txt\n"
-          f"  - puzzles/day{day:02d}.html/.md\n"
-          f"  - python/day{day:02d}.py\n"
-          f"  - powershell/day{day:02d}.ps1\n"
-          f"  - helpers/solver_prompt.md\n")
+          f" - inputs/day{day:02d}.txt\n"
+          f" - puzzles/day{day:02d}.html/.md\n"
+          f" - python/day{day:02d}.py\n"
+          f" - powershell/day{day:02d}.ps1\n"
+          f" - helpers/solver_prompt.md\n")
 
 if __name__ == "__main__":
     try:
@@ -346,3 +315,4 @@ if __name__ == "__main__":
     except Exception as ex:
         print(f"[error] {ex}")
         sys.exit(1)
+
